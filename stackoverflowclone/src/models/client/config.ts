@@ -1,9 +1,9 @@
-import { Client, Account, Avatars, Databases, Storage } from 'appwrite';
-import env from '@/src/env';
+import { Client, Account, Avatars, Databases, Storage } from "appwrite";
+import env from "@/src/app/env";
 
 const client = new Client()
-    .setEndpoint(env.appwrite.endpoint) 
-    .setProject(env.appwrite.projectId); 
+  .setEndpoint(env.appwrite.endpoint)
+  .setProject(env.appwrite.projectId);
 
 const account = new Account(client);
 const databases = new Databases(client);
