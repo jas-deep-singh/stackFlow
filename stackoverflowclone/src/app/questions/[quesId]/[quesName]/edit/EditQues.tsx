@@ -1,12 +1,13 @@
 "use client";
 
-import QuestionForm, { type QuestionDocument } from "../../../../../components/QuestionForm";
-import { useAuthStore } from "../../../../../store/Auth";
-import slugify from "../../../../../utils/slugify";
+import QuestionForm from "@/components/QuestionForm";
+import { useAuthStore } from "@/store/Auth";
+import slugify from "@/utils/slugify";
+import { Models } from "appwrite";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const EditQues = ({ question }: { question: QuestionDocument }) => {
+const EditQues = ({ question }: { question: Models.Document }) => {
     const { user } = useAuthStore();
     const router = useRouter();
 
@@ -14,7 +15,7 @@ const EditQues = ({ question }: { question: QuestionDocument }) => {
         if (question.authorId !== user?.$id) {
             router.push(`/questions/${question.$id}/${slugify(question.title)}`);
         }
-    }, [question.$id, question.authorId, question.title, router, user?.$id]);
+    }, []);
 
     if (user?.$id !== question.authorId) return null;
 

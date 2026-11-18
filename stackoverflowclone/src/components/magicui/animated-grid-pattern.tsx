@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "../../../lib/utils";
+import { cn } from "@/utils/cn";
 import { motion } from "framer-motion";
 import { useEffect, useId, useRef, useState } from "react";
 
@@ -41,12 +41,16 @@ export function GridPattern({
             Math.floor((Math.random() * dimensions.height) / height),
         ];
     }
+
+    // Adjust the generateSquares function to return objects with an id, x, and y
     function generateSquares(count: number) {
         return Array.from({ length: count }, (_, i) => ({
             id: i,
             pos: getPos(),
         }));
     }
+
+    // Function to update a single square's position
     const updateSquarePosition = (id: number) => {
         setSquares(currentSquares =>
             currentSquares.map(sq =>
@@ -59,6 +63,8 @@ export function GridPattern({
             )
         );
     };
+
+    // Update squares to animate in
     useEffect(() => {
         if (dimensions.width && dimensions.height) {
             setSquares(generateSquares(numSquares));

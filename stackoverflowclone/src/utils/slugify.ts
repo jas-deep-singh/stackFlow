@@ -1,9 +1,9 @@
-export default function slugify(value: string): string {
-    return value
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
+export default function slugify(text: string) {
+  return text
+      .toString()
+      .toLowerCase()
+      .trim() // Trim whitespace from both sides of the string
+      .replace(/\s+/g, "-") // Replace spaces with a dash
+      .replace(/[^\w\-]+/g, "") // Remove all non-word characters
+      .replace(/\-\-+/g, "-"); // Replace multiple dashes with a single dash
 }

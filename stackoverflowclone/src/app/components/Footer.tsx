@@ -1,6 +1,6 @@
 import React from "react";
-import AnimatedGridPattern from "../../components/magicui/animated-grid-pattern";
-import { cn } from "../../../lib/utils";
+import AnimatedGridPattern from "@/components/magicui/animated-grid-pattern";
+import { cn } from "@/utils/cn";
 import Link from "next/link";
 
 const Footer = () => {
@@ -44,7 +44,7 @@ const Footer = () => {
                 duration={3}
                 repeatDelay={1}
                 className={cn(
-                    "mask-[radial-gradient(3000px_circle_at_center,white,transparent)]",
+                    "[mask-image:radial-gradient(3000px_circle_at_center,white,transparent)]",
                     "inset-y-[-50%] h-[200%] skew-y-6"
                 )}
             />

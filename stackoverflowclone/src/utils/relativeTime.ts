@@ -1,19 +1,37 @@
-const formatter = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+export default function convertDateToRelativeTime(date: Date) {
+  if (date.toString().toLowerCase() === "invalid date") return "";
 
-const units: Array<[Intl.RelativeTimeFormatUnit, number]> = [
-    ["year", 60 * 60 * 24 * 365],
-    ["month", 60 * 60 * 24 * 30],
-    ["week", 60 * 60 * 24 * 7],
-    ["day", 60 * 60 * 24],
-    ["hour", 60 * 60],
-    ["minute", 60],
-    ["second", 1],
-];
+  const now = new Date();
+  const timeDifferenceInMiliSeconds = now.getTime() - date.getTime();
 
-export default function convertDateToRelativeTime(date: Date): string {
-    const elapsedSeconds = (date.getTime() - Date.now()) / 1000;
-    const [unit, secondsPerUnit] =
-        units.find(([, seconds]) => Math.abs(elapsedSeconds) >= seconds) ?? units.at(-1)!;
+  const seconds = Math.floor(timeDifferenceInMiliSeconds / 1000);
+  if (seconds < 10) {
+      return `Just now`;
+  }
+  if (seconds < 60) {
+      return `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
+  }
 
-    return formatter.format(Math.round(elapsedSeconds / secondsPerUnit), unit);
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) {
+      return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) {
+      return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+  }
+
+  const days = Math.floor(hours / 24);
+  if (days < 30) {
+      return `${days} day${days !== 1 ? "s" : ""} ago`;
+  }
+
+  const months = Math.floor(days / 30.44); // Average days in a month
+  if (months < 12) {
+      return `${months} month${months !== 1 ? "s" : ""} ago`;
+  }
+
+  const years = Math.floor(months / 12);
+  return `${years} year${years !== 1 ? "s" : ""} ago`;
 }

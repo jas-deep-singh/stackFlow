@@ -1,4 +1,3 @@
-// @ts-ignore canvas-confetti may not include declarations in this project.
 import confetti from "canvas-confetti";
 
 interface ConfettiOptions extends confetti.Options {

@@ -1,11 +1,11 @@
 "use client";
 
-import { databases } from "@/src/models/client/config";
-import { commentCollection, db } from "@/src/models/name";
-import { useAuthStore } from "@/src/store/Auth";
-import { cn } from "@/lib/utils";
-import convertDateToRelativeTime from "@/src/utils/relativeTime";
-import slugify from "@/src/utils/slugify";
+import { databases } from "@/models/client/config";
+import { commentCollection, db } from "@/models/name";
+import { useAuthStore } from "@/store/Auth";
+import { cn } from "@/lib/utils"
+import convertDateToRelativeTime from "@/utils/relativeTime";
+import slugify from "@/utils/slugify";
 import { IconTrash } from "@tabler/icons-react";
 import { ID, Models } from "appwrite";
 import Link from "next/link";

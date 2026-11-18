@@ -1,12 +1,12 @@
-import { databases, users } from "../../models/server/config";
-import { answerCollection, db, voteCollection, questionCollection } from "../../models/name";
+import { databases, users } from "@/models/server/config";
+import { answerCollection, db, voteCollection, questionCollection } from "@/models/name";
 import { Query } from "node-appwrite";
 import React from "react";
 import Link from "next/link";
-import ShimmerButton from "../../components/magicui/shimmer-button";
-import QuestionCard from "../../components/QuestionCard";
-import { userPrefs } from "../../store/Auth";
-import Pagination from "../../components/Pagination";
+import ShimmerButton from "@/components/magicui/shimmer-button";
+import QuestionCard from "@/components/QuestionCard";
+import { UserPrefs } from "@/store/Auth";
+import Pagination from "@/components/Pagination";
 import Search from "./Search";
 
 const Page = async ({
@@ -37,7 +37,7 @@ const Page = async ({
     questions.documents = await Promise.all(
         questions.documents.map(async ques => {
             const [author, answers, votes] = await Promise.all([
-                users.get<userPrefs>(ques.authorId),
+                users.get<UserPrefs>(ques.authorId),
                 databases.listDocuments(db, answerCollection, [
                     Query.equal("questionId", ques.$id),
                     Query.limit(1), // for optimization

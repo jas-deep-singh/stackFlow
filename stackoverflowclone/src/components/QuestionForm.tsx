@@ -1,26 +1,19 @@
 "use client";
-import RTE from "./RTE";
-import Meteors from "./magicui/meteors";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { useAuthStore } from "../store/Auth";
+
+import RTE from "@/components/RTE";
+import Meteors from "@/components/magicui/meteors";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuthStore } from "@/store/Auth";
 import { cn } from "@/lib/utils";
-import slugify from "../utils/slugify";
+import slugify from "@/utils/slugify";
 import { IconX } from "@tabler/icons-react";
-import { ID, type Models } from "appwrite";
+import { Models, ID } from "appwrite";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { databases, storage } from "../models/client/config";
-import { db, questionAttachmentBucket, questionCollection } from "../models/name";
-import { Confetti } from "./magicui/confetti";
-
-export type QuestionDocument = Models.Document & {
-    authorId: string;
-    title: string;
-    content: string;
-    tags: string[];
-    attachmentId: string;
-};
+import { databases, storage } from "@/models/client/config";
+import { db, questionAttachmentBucket, questionCollection } from "@/models/name";
+import { Confetti } from "@/components/magicui/confetti";
 
 const LabelInputContainer = ({
     children,
@@ -41,7 +34,13 @@ const LabelInputContainer = ({
         </div>
     );
 };
-const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
+
+/**
+ * ******************************************************************************
+ * ![INFO]: for buttons, refer to https://ui.aceternity.com/components/tailwindcss-buttons
+ * ******************************************************************************
+ */
+const QuestionForm = ({ question }: { question?: Models.Document }) => {
     const { user } = useAuthStore();
     const [tag, setTag] = React.useState("");
     const router = useRouter();
@@ -153,8 +152,8 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
             const response = question ? await update() : await create();
 
             router.push(`/questions/${response.$id}/${slugify(formData.title)}`);
-        } catch (error) {
-            setError(error instanceof Error ? error.message : "An unexpected error occurred");
+        } catch (error: any) {
+            setError(() => error.message);
         }
 
         setLoading(() => false);
@@ -183,7 +182,7 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                     placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
                     type="text"
                     value={formData.title}
-                    onChange={(e: { target: { value: string; }; }) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                    onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
                 />
             </LabelInputContainer>
             <LabelInputContainer>
@@ -214,7 +213,7 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                     accept="image/*"
                     placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
                     type="file"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    onChange={e => {
                         const files = e.target.files;
                         if (!files || files.length === 0) return;
                         setFormData(prev => ({
@@ -241,11 +240,11 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                             placeholder="e.g. (java c objective-c)"
                             type="text"
                             value={tag}
-                            onChange={(e: { target: { value: string; }; }) => setTag(() => e.target.value)}
+                            onChange={e => setTag(() => e.target.value)}
                         />
                     </div>
                     <button
-                        className="relative shrink-0 rounded-full border border-slate-600 bg-slate-700 px-8 py-2 text-sm text-white transition duration-200 hover:shadow-2xl hover:shadow-white/10"
+                        className="relative shrink-0 rounded-full border border-slate-600 bg-slate-700 px-8 py-2 text-sm text-white transition duration-200 hover:shadow-2xl hover:shadow-white/[0.1]"
                         type="button"
                         onClick={() => {
                             if (tag.length === 0) return;
@@ -256,7 +255,7 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                             setTag(() => "");
                         }}
                     >
-                        <div className="absolute inset-x-0 -top-px mx-auto h-px w-1/2 bg-linear-to-r from-transparent via-teal-500 to-transparent shadow-2xl" />
+                        <div className="absolute inset-x-0 -top-px mx-auto h-px w-1/2 bg-gradient-to-r from-transparent via-teal-500 to-transparent shadow-2xl" />
                         <span className="relative z-20">Add</span>
                     </button>
                 </div>
@@ -265,7 +264,7 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                         <div key={index} className="flex items-center gap-2">
                             <div className="group relative inline-block rounded-full bg-slate-800 p-px text-xs font-semibold leading-6 text-white no-underline shadow-2xl shadow-zinc-900">
                                 <span className="absolute inset-0 overflow-hidden rounded-full">
-                                    <span className="absolute inset-0 rounded-full bg-[radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                                    <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                                 </span>
                                 <div className="relative z-10 flex items-center space-x-2 rounded-full bg-zinc-950 px-4 py-0.5 ring-1 ring-white/10">
                                     <span>{tag}</span>
@@ -283,14 +282,14 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                                         <IconX size={12} />
                                     </button>
                                 </div>
-                                <span className="absolute bottom-0 left-4.5 h-px w-[calc(100%-2.25rem)] bg-linear-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40" />
+                                <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40" />
                             </div>
                         </div>
                     ))}
                 </div>
             </LabelInputContainer>
             <button
-                className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-size-[200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+                className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
                 type="submit"
                 disabled={loading}
             >

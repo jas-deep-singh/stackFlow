@@ -1,8 +1,8 @@
 "use client";
 
-import { databases } from "../../../../models/server/config";
-import { db, questionCollection } from "../../../../models/name";
-import { useAuthStore } from "../../../../store/Auth";
+import { databases } from "@/models/client/config";
+import { db, questionCollection } from "@/models/name";
+import { useAuthStore } from "@/store/Auth";
 import { IconTrash } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -16,8 +16,8 @@ const DeleteQuestion = ({ questionId, authorId }: { questionId: string; authorId
             await databases.deleteDocument(db, questionCollection, questionId);
 
             router.push("/questions");
-        } catch (error: unknown) {
-            window.alert(error instanceof Error ? error.message : "Something went wrong");
+        } catch (error: any) {
+            window.alert(error?.message || "Something went wrong");
         }
     };
 

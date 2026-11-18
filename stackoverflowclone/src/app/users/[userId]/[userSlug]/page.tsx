@@ -1,14 +1,14 @@
-import { databases, users } from "../../../../models/server/config";
-import { userPrefs } from "../../../../store/Auth";
+import { databases, users } from "@/models/server/config";
+import { UserPrefs } from "@/store/Auth";
 import React from "react";
-import { MagicCard, MagicContainer } from "../../../../components/magicui/magic-card";
-import NumberTicker from "../../../../components/magicui/number-ticker";
-import { answerCollection, db, questionCollection } from "../../../../models/name";
+import { MagicCard, MagicContainer } from "@/components/magicui/magic-card";
+import NumberTicker from "@/components/magicui/number-ticker";
+import { answerCollection, db, questionCollection } from "@/models/name";
 import { Query } from "node-appwrite";
 
 const Page = async ({ params }: { params: { userId: string; userSlug: string } }) => {
     const [user, questions, answers] = await Promise.all([
-        users.get<userPrefs>(params.userId),
+        users.get<UserPrefs>(params.userId),
         databases.listDocuments(db, questionCollection, [
             Query.equal("authorId", params.userId),
             Query.limit(1), // for optimization
@@ -20,7 +20,7 @@ const Page = async ({ params }: { params: { userId: string; userSlug: string } }
     ]);
 
     return (
-        <MagicContainer className={"flex h-125 w-full flex-col gap-4 lg:h-62.5 lg:flex-row"}>
+        <MagicContainer className={"flex h-[500px] w-full flex-col gap-4 lg:h-[250px] lg:flex-row"}>
             <MagicCard className="flex w-full cursor-pointer flex-col items-center justify-center overflow-hidden p-20 shadow-2xl">
                 <div className="absolute inset-x-4 top-4">
                     <h2 className="text-xl font-medium">Reputation</h2>

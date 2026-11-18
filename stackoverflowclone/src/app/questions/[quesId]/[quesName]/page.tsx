@@ -1,10 +1,10 @@
-import Answers from "../../../../components/Answers";
-import Comments from "../../../../components/Comments";
-import { MarkdownPreview } from "../../../../components/RTE";
-import VoteButtons from "../../../../components/VoteButtons";
-import Particles from "../../../../components/magicui/particles";
-import ShimmerButton from "../../../../components/magicui/shimmer-button";
-import { avatars } from "../../../../models/client/config";
+import Answers from "@/components/Answers";
+import Comments from "@/components/Comments";
+import { MarkdownPreview } from "@/components/RTE";
+import VoteButtons from "@/components/VoteButtons";
+import Particles from "@/components/magicui/particles";
+import ShimmerButton from "@/components/magicui/shimmer-button";
+import { avatars } from "@/models/client/config";
 import {
     answerCollection,
     db,
@@ -12,18 +12,19 @@ import {
     questionCollection,
     commentCollection,
     questionAttachmentBucket,
-} from "../../../../models/name";
-import { databases, users } from "../../../../models/server/config";
-import { storage } from "../../../../models/client/config";
-import { userPrefs } from "../../../../store/Auth";
-import convertDateToRelativeTime from "../../../../utils/relativeTime";
-import slugify from "../../../../utils/slugify";
+} from "@/models/name";
+import { databases, users } from "@/models/server/config";
+import { storage } from "@/models/client/config";
+import { UserPrefs } from "@/store/Auth";
+import convertDateToRelativeTime from "@/utils/relativeTime";
+import slugify from "@/utils/slugify";
+import { IconEdit } from "@tabler/icons-react";
 import Link from "next/link";
 import { Query } from "node-appwrite";
 import React from "react";
 import DeleteQuestion from "./DeleteQuestion";
 import EditQuestion from "./EditQuestion";
-import { TracingBeam } from "../../../../components/ui/tracing-beam";
+import { TracingBeam } from "@/components/ui/tracing-beam";
 
 const Page = async ({ params }: { params: { quesId: string; quesName: string } }) => {
     const [question, answers, upvotes, downvotes, comments] = await Promise.all([
@@ -52,11 +53,11 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
     ]);
 
     // since it is dependent on the question, we fetch it here outside of the Promise.all
-    const author = await users.get<userPrefs>(question.authorId);
+    const author = await users.get<UserPrefs>(question.authorId);
     [comments.documents, answers.documents] = await Promise.all([
         Promise.all(
             comments.documents.map(async comment => {
-                const author = await users.get<userPrefs>(comment.authorId);
+                const author = await users.get<UserPrefs>(comment.authorId);
                 return {
                     ...comment,
                     author: {
@@ -70,7 +71,7 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
         Promise.all(
             answers.documents.map(async answer => {
                 const [author, comments, upvotes, downvotes] = await Promise.all([
-                    users.get<userPrefs>(answer.authorId),
+                    users.get<UserPrefs>(answer.authorId),
                     databases.listDocuments(db, commentCollection, [
                         Query.equal("typeId", answer.$id),
                         Query.equal("type", "answer"),
@@ -92,7 +93,7 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
 
                 comments.documents = await Promise.all(
                     comments.documents.map(async comment => {
-                        const author = await users.get<userPrefs>(comment.authorId);
+                        const author = await users.get<UserPrefs>(comment.authorId);
                         return {
                             ...comment,
                             author: {
@@ -173,7 +174,7 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                                     storage.getFilePreview(
                                         questionAttachmentBucket,
                                         question.attachmentId
-                                    )
+                                    ).href
                                 }
                                 alt={question.title}
                                 className="mt-3 rounded-lg"
@@ -193,7 +194,7 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                         <div className="mt-4 flex items-center justify-end gap-1">
                             <picture>
                                 <img
-                                    src={avatars.getInitials(author.name, 36, 36)}
+                                    src={avatars.getInitials(author.name, 36, 36).href}
                                     alt={author.name}
                                     className="rounded-lg"
                                 />
